@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table,  Button, Tabs, Skeleton, Card, Input, Form, message } from 'antd';
+import { Table, Button, Tabs, Skeleton, Card, Input, Form, message } from 'antd';
 import axios from 'axios'
 import { Fragment } from 'react';
 import CSVReader from "react-csv-reader";
@@ -102,14 +102,14 @@ export default class CardList extends Component {
         }
     }
 
-    componentDidMount() {}
-    handleForce = (data) => this.setState({usedCard: data}, console.log(data))
-    
-    
+    componentDidMount() { }
+    handleForce = (data) => this.setState({ usedCard: data }, console.log(data))
+
+
     uploadToDB = () => {
         let data = this.state.usedCard;
 
-        if(data.length === 0){
+        if (data.length === 0) {
             message.destroy()
             message.warn('No Data Found')
         } else {
@@ -141,7 +141,7 @@ export default class CardList extends Component {
                     axios.post(this.state.updateURL, data).then(res => {
                         resolve(res.data)
                     }).catch(err => {
-                        resolve({status: 'Problem'})
+                        resolve({ status: 'Problem' })
                     })
                 })
             })).then(ress => {
@@ -150,9 +150,9 @@ export default class CardList extends Component {
             })
         }
     }
-    
-    
-    
+
+
+
     render() {
         const { columns, usedCard, activeCard, isLoadingDB } = this.state;
         const papaparseOptions = {
@@ -164,13 +164,15 @@ export default class CardList extends Component {
 
         return (
             <Fragment>
-                <CSVReader
-                    cssClass="react-csv-input"
-                    onFileLoaded={this.handleForce}
-                    parserOptions={papaparseOptions}
-                />
-                
-                <Form.Item label="API UPload Link" style={{marginTop: 10}}>
+                <Form.Item label="Upload CSV" style={{ marginTop: 10 }}>
+                    <CSVReader
+                        cssClass="react-csv-input"
+                        onFileLoaded={this.handleForce}
+                        parserOptions={papaparseOptions}
+                    />
+                </Form.Item>
+
+                <Form.Item label="API UPload Link" style={{ marginTop: 10 }}>
                     <Input value={this.state.updateURL} placeholder="Upload URL" />
                 </Form.Item>
 
