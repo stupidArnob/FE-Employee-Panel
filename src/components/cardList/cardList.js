@@ -154,7 +154,7 @@ export default class CardList extends Component {
 
 
     render() {
-        const { columns, usedCard, activeCard, isLoadingDB } = this.state;
+        const { columns, usedCard, isLoadingDB } = this.state;
         const papaparseOptions = {
             header: true,
             dynamicTyping: true,
