@@ -98,7 +98,7 @@ export default class CardList extends Component {
                     key: 'remark',
                 },
             ],
-            updateURL: 'http://localhost:81/panel/api.php',
+            updateURL: 'http://localhost/test/api.php',
         }
     }
 
@@ -108,7 +108,6 @@ export default class CardList extends Component {
 
     uploadToDB = () => {
         let data = this.state.usedCard;
-
         if (data.length === 0) {
             message.destroy()
             message.warn('No Data Found')
@@ -119,7 +118,7 @@ export default class CardList extends Component {
                 return new Promise((resolve, reject) => {
                     let data = {
                         sql: `INSERT INTO table_name 
-                            (Dept, User_ID, uname, Date, Planned_T1, Actual_T1, Planned_T2, Actual_T2, Normal_Overtime, Holiday_Overtime, Late, Leave_Early, Absenteeism, Remark) 
+                            (Dept, User_ID, uname, Date, Planned_T1, Actual_T1, Planned_T2, Actual_T2, Normal_Overtime, Holiday_Overtime, Late, Leave_Early, AbsenteeismDay, Remark) 
                             VALUES (
                                 '${item.dept == null ? "" : item.dept}', 
                                 '${item.user_id == null ? "" : item.user_id}', 
@@ -137,7 +136,7 @@ export default class CardList extends Component {
                                 '${item.remark == null ? "" : item.remark}'
                             );`
                     }
-
+                    console.log(data)
                     axios.post(this.state.updateURL, data).then(res => {
                         resolve(res.data)
                     }).catch(err => {
@@ -151,6 +150,20 @@ export default class CardList extends Component {
         }
     }
 
+    deleteTable = () => {
+
+        let data = {
+            sql: `DELETE FROM table_name WHERE 1`
+        }
+        console.log(data)
+        axios.post(this.state.updateURL, data).then(res => {
+            message.destroy()
+            message.success("Deleted")
+        }).catch(err => {
+            message.destroy()
+            message.error("Network Error")
+        })
+    }
 
 
     render() {
@@ -173,7 +186,7 @@ export default class CardList extends Component {
                 </Form.Item>
 
                 <Form.Item label="API UPload Link" style={{ marginTop: 10 }}>
-                    <Input value={this.state.updateURL} placeholder="Upload URL" />
+                    <Input value={this.state.updateURL} placeholder="Upload URL" onChange={e => this.setState({updateURL: e.target.value})}/>
                 </Form.Item>
 
                 <Tabs>
@@ -181,9 +194,10 @@ export default class CardList extends Component {
                         <Skeleton loading={isLoadingDB}>
                             <Card
                                 title={`Data (${usedCard.length})`}
-                                extra={
-                                    <Button type="primary" onClick={this.uploadToDB}>Upload</Button>
-                                }
+                                extra={[
+                                    <Button type="primary" onClick={this.uploadToDB}>Upload</Button>,
+                                    <Button type="primary" onClick={this.deleteTable}>Delete Table</Button>
+                                ]}
                             >
                                 <Table
                                     title={() => ""}
